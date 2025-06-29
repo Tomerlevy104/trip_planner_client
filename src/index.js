@@ -2,12 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import { BrowserRouter } from 'react-router-dom'; // Importing the BrowserRouter to enable routing in the app
 import reportWebVitals from './reportWebVitals';
 
+
+// It locates the <div id="root"> in the HTML.
+// It "injects" the <App /> component into it.
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );
 
