@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormStringInput from "../components/FormStringInput";
+import axios from "axios";
+import "./style/RegisterPage.css";
+import validation from "../utils/validation";
+
 
 function RegisterPage() {
   const [firstName, setFirstName] = useState("");
@@ -10,21 +14,57 @@ function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      alert("הסיסמאות לא תואמות!");
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    // Validation input 
+    if (!validation.validateMinLength(firstName, 2)) {
+      alert("שם פרטי חייב להכיל לפחות 2 תווים");
       return;
     }
-    console.log("User registered:", { firstName, lastName, email, password });
-    alert("ההרשמה בוצעה בהצלחה (לצורך הדגמה בלבד)");
-    navigate("/tripplanner");
-  };
+
+    if (!validation.validateMinLength(lastName, 2)) {
+      alert("שם משפחה חייב להכיל לפחות 2 תווים");
+      return;
+    }
+
+    if (!validation.validateEmail(email)) {
+      alert("אנא הזן כתובת אימייל חוקית");
+      return;
+    }
+
+    if (!validation.validatePassword(password)) {
+      alert("הסיסמה חייבת להיות באורך של לפחות 6 תווים");
+      return;
+    }
+
+    if (!validation.validatePasswordsMatch(password, confirmPassword)) {
+      alert("הסיסמאות לא תואמות");
+      return;
+    }
+
+    try {
+      const response = await axios.post("/api/users/register", {
+        username: `${firstName} ${lastName}`,
+        email,
+        password,
+      });
+
+      localStorage.setItem("username", response.data.user.username);
+      console.log("Register success:", response.data);
+
+
+      navigate("/home"); // Navigate to the Home page after successful registration
+    } catch (error) {
+      console.error("Register error:", error);
+      alert("שגיאה בהרשמה, אנא נסה שוב מאוחר יותר");
+    }
+  }
 
   return (
-    <div dir="rtl" className="register-page" style={{ padding: "20px" }}>
+    <div dir="rtl" className="register-page">
       <h1>הרשמה</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="register-form">
         <FormStringInput
           label="שם פרטי:"
           type="text"
@@ -56,11 +96,12 @@ function RegisterPage() {
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
 
-        <button type="submit">הרשמה</button>
+        <button type="submit" className="register-btn">
+          הרשמה
+        </button>
       </form>
     </div>
   );
 }
 
 export default RegisterPage;
-// This is the RegisterPage component that allows users to register.

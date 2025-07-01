@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./TripOptionsPage.css"; // נשמור מקום לסטיילינג
 import TripCard from "../components/TripCard";
+import "./style/TripOptionsPage.css";
 
 function TripOptionsPage() {
   const navigate = useNavigate();
 
-  // כאן נשתמש בנתונים דמיוניים. בהמשך נמלא אותם בפרטי אמת שנגיע אליהם מהתכנון.
-  const trips = [
+  // כאן נשתמש ב-state במקום קבוע
+  const [trips, setTrips] = useState([
     {
       id: 1,
       name: "טיול אופניים בצפון",
@@ -16,6 +16,7 @@ function TripOptionsPage() {
       distance: "45 ק״מ",
       difficulty: "בינוני",
       type: "טיול אופניים",
+      isFavorite: false,
     },
     {
       id: 2,
@@ -25,12 +26,35 @@ function TripOptionsPage() {
       distance: "12 ק״מ",
       difficulty: "קל",
       type: "טיול רגלי",
+      isFavorite: true,
     },
-    // אפשר להוסיף עוד הצעות...
-  ];
+    {
+      id: "3",
+      name: "מסלול רכיבה באופניים, נתניה",
+      country: "ישראל",
+      city: "נתניה",
+      distance: "19 ק״מ",
+      difficulty: "בינוני",
+      type: "טיול אופניים",
+      imageUrl: "/images/default_trip.png",
+      isFavorite: false,
+
+    },
+  ]);
 
   const handleCardClick = (tripId) => {
     navigate(`/tripdetails/${tripId}`);
+  };
+
+  // פונקציה להפיכת מועדף
+  const handleToggleFavorite = (tripId) => {
+    setTrips((prevTrips) =>
+      prevTrips.map((trip) =>
+        trip.id === tripId
+          ? { ...trip, isFavorite: !trip.isFavorite }
+          : trip
+      )
+    );
   };
 
   return (
@@ -46,6 +70,8 @@ function TripOptionsPage() {
             tripType={trip.type}
             difficulty={trip.difficulty}
             distance={trip.distance}
+            isFavorite={trip.isFavorite}
+            onFavoriteToggle={() => handleToggleFavorite(trip.id)}
             onClick={() => handleCardClick(trip.id)}
           />
         ))}

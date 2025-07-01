@@ -1,11 +1,11 @@
-// src/pages/TripDetailsPage.js
 import React from "react";
 import { useParams } from "react-router-dom";
+import WeatherForecastCard from "../components/WeatherForecastCard";
+import "./style/TripDetailsPage.css"; // נכין CSS
 
 function TripDetailsPage() {
   const { tripId } = useParams();
 
-  // ⚠️ כרגע נשתמש בדאטה דמה, בהמשך נחבר לדאטה אמיתי
   const dummyTrips = [
     {
       id: "1",
@@ -16,42 +16,68 @@ function TripDetailsPage() {
       difficulty: "בינוני",
       type: "טיול אופניים",
       description: "זהו מסלול קסום באזור חיפה, מתאים לכל המשפחה.",
+      weather: "24°C",
+      days: [
+        { day: 1, distance: "10 ק״מ" },
+        { day: 2, distance: "12 ק״מ" },
+      ],
     },
-    {
-      id: "2",
-      name: "מסלול הליכה בטוקיו",
-      country: "יפן",
-      city: "טוקיו",
-      distance: "12 ק״מ",
-      difficulty: "קל",
-      type: "טיול רגלי",
-      description: "מסלול הליכה עירוני בנופים מרהיבים של טוקיו.",
-    },
+    // הוספת מסלולים נוספים...
   ];
 
   const trip = dummyTrips.find((t) => t.id === tripId);
 
   if (!trip) {
     return (
-      <div dir="rtl" style={{ padding: "20px" }}>
+      <div className="trip-details-container">
         <h2>הטיול לא נמצא</h2>
       </div>
     );
   }
 
   return (
-    <div dir="rtl" style={{ padding: "20px" }}>
+    <div className="trip-details-container" dir="rtl">
       <h1>{trip.name}</h1>
-      <p><strong>יעד:</strong> {trip.country}, {trip.city}</p>
-      <p><strong>סוג טיול:</strong> {trip.type}</p>
-      <p><strong>רמת קושי:</strong> {trip.difficulty}</p>
-      <p><strong>מרחק כולל:</strong> {trip.distance}</p>
-      <p><strong>תיאור:</strong> {trip.description}</p>
+      <p className="trip-description">{trip.description}</p>
 
-      {/* כאן בעתיד נוסיף את המפה */}
-      <div style={{ marginTop: "20px", height: "200px", background: "#eee", textAlign: "center", lineHeight: "200px" }}>
-        מפה תוצג כאן
+      <div className="trip-info-cards">
+        <div className="info-card">
+          <strong>סוג טיול: </strong>
+          <span>{trip.type}</span>
+        </div>
+        <div className="info-card">
+          <strong>רמת קושי: </strong>
+          <span>{trip.difficulty}</span>
+        </div>
+        <div className="info-card">
+          <strong>מרחק כולל: </strong>
+          <span>{trip.distance}</span>
+        </div>
       </div>
+
+      <h3>פירוט יומי</h3>
+      <ul className="trip-days-list">
+        {trip.days.map((d) => (
+          <li key={d.day}>
+            יום {d.day} - {d.distance}
+          </li>
+        ))}
+      </ul>
+
+      <div className="trip-map-placeholder">
+        מפה תוצג כאן
+        
+      </div>
+        <br></br>
+      <WeatherForecastCard
+        currentTemp="24°C"
+        currentDescription="Sunny"
+        upcomingDays={[
+          { date: "2025-07-01", min: "22°", max: "26°", description: "Sunny" },
+          { date: "2025-07-02", min: "23°", max: "27°", description: "Sunny" },
+          { date: "2025-07-03", min: "21°", max: "25°", description: "Sunny" }
+        ]}
+      />
     </div>
   );
 }

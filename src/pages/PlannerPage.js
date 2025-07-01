@@ -1,19 +1,25 @@
 import React, { useState } from "react";
-import DifficultySelector from "../components/DifficultySelector";
-import PreferencesCheckboxes from "../components/PreferencesCheckboxes";
+// import FormRadioGroup from "../components/FormRadioGroup";
+// import FormCheckboxGroup from "../components/FormCheckboxGroup";
 import FormStringInput from "../components/FormStringInput";
 import FormDDLInput from "../components/FormDDLInput";
+import "./style/PlannerPage.css";
+
+import { useNavigate } from "react-router-dom";
 
 function PlannerPage() {
   const [tripName, setTripName] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
-  const [participants, setParticipants] = useState(1);
   const [tripType, setTripType] = useState("בחר");
-  const [budget, setBudget] = useState("");
-  const [preferences, setPreferences] = useState([]);
-  const [difficulty, setDifficulty] = useState("");
-  const participantsOptions = Array.from({ length: 20 }, (_, i) => `${i + 1}`);
+  // const [participants, setParticipants] = useState(1);
+  // const [budget, setBudget] = useState("");
+  // const [preferences, setPreferences] = useState([]);
+  // const [difficulty, setDifficulty] = useState("");
+  const navigate = useNavigate();
+
+  // דוגמאות לנתונים
+  // const participantsOptions = Array.from({ length: 20 }, (_, i) => `${i + 1}`);
   const citiesByCountry = {
     ישראל: ["תל אביב", "ירושלים", "חיפה"],
     יפן: ["טוקיו", "קיוטו", "אוסקה"],
@@ -21,33 +27,34 @@ function PlannerPage() {
     'ארה"ב': ["ניו יורק", "לוס אנג׳לס", "סן פרנסיסקו"],
   };
 
-  const handlePreferenceChange = (e) => {
-    const value = e.target.value;
-    if (e.target.checked) {
-      setPreferences([...preferences, value]);
-    } else {
-      setPreferences(preferences.filter((pref) => pref !== value));
-    }
-  };
+  // const handlePreferenceChange = (e) => {
+  //   const value = e.target.value;
+  //   if (e.target.checked) {
+  //     setPreferences([...preferences, value]);
+  //   } else {
+  //     setPreferences(preferences.filter((pref) => pref !== value));
+  //   }
+  // };
 
+  // Here we handle the form submission
+  // In the future, we will send this data to the backend or a model for processing
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("שם הטיול:", tripName);
     console.log("מדינה:", country);
     console.log("עיר:", city);
-    console.log("משתתפים:", participants);
     console.log("סוג הטיול:", tripType);
-    console.log("תקציב:", budget);
-    console.log("העדפות:", preferences);
-    console.log("רמת קושי:", difficulty);
-    alert("הטיול נשמר (לצורך הדגמה בלבד)");
+    // console.log("משתתפים:", participants);
+    // console.log("תקציב:", budget);
+    // console.log("העדפות:", preferences);
+    // console.log("רמת קושי:", difficulty);
+    navigate("/tripoptions"); // פה אני אומר לאן אני רוצה לעבור אחרי לחיצה על הכפתור "צור מסלול" בעתיד אני אצטרך לשלוח את זה למודל
   };
 
   return (
-    <div dir="rtl" style={{ padding: "20px" }}>
+<div dir="rtl" className="planner-page">
       <h1>תכנון מסלול</h1>
-      <form onSubmit={handleSubmit}>
-
+      <form onSubmit={handleSubmit} className="planner-form">
         <FormStringInput
           label="שם הטיול:"
           type="text"
@@ -77,14 +84,6 @@ function PlannerPage() {
         />
 
         <FormDDLInput
-          label="מספר משתתפים:"
-          value={participants}
-          onChange={(e) => setParticipants(e.target.value)}
-          options={participantsOptions}
-          required
-        />
-
-        <FormDDLInput
           label="סוג הטיול:"
           value={tripType}
           onChange={(e) => setTripType(e.target.value)}
@@ -92,7 +91,15 @@ function PlannerPage() {
           required
         />
 
-        <FormDDLInput
+        {/* <FormDDLInput
+          label="מספר משתתפים:"
+          value={participants}
+          onChange={(e) => setParticipants(e.target.value)}
+          options={participantsOptions}
+          required
+        /> */}
+
+        {/* <FormDDLInput
           label="תקציב משוער:"
           value={budget}
           onChange={(e) => setBudget(e.target.value)}
@@ -105,19 +112,24 @@ function PlannerPage() {
             'מעל 500 ש"ח',
           ]}
           required
-        />
+        /> */}
 
-        <DifficultySelector
-          difficulty={difficulty}
-          setDifficulty={setDifficulty}
-        />
+        {/* <FormRadioGroup
+          label="רמת קושי:"
+          options={["קל", "בינוני", "קשה"]}
+          selectedValue={difficulty}
+          onChange={(e) => setDifficulty(e.target.value)}
+          name="difficulty"
+        /> */}
 
-        <PreferencesCheckboxes
-          preferences={preferences}
-          handlePreferenceChange={handlePreferenceChange}
-        />
+        {/* <FormCheckboxGroup
+          label="העדפות מיוחדות:"
+          options={["קמפינג", "חניה קרובה", "נגישות לנכים", "מאגרי מים"]}
+          selectedValues={preferences}
+          onChange={handlePreferenceChange}
+        /> */}
 
-        <button type="submit">צור מסלול</button>
+        <button type="submit" className= "planner-submit">צור מסלול</button>
       </form>
     </div>
   );

@@ -1,29 +1,52 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import FormStringInput from '../components/FormStringInput';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import FormStringInput from "../components/FormStringInput";
+import axios from "axios";
+import validation from "../utils/validation";
+
+import "./style/LoginPage.css";
 
 function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  function handleSubmit(event) {
-    //event.preventDefault(); // Prevent the default form submission behavior (prevent page reload)
+  async function handleSubmit(event) {
+    event.preventDefault();
 
-    // Here in the future I will call the API
-    // I will write the API call logic here
-    // const response = await fetch('/api/login', { ... });
-    // For now, just log the email and password (F12 to see the console output on the browser)
-    console.log('Email:', email);
-    console.log('Password:', password);
+    if (!validation.validateEmail(email)) {
+      alert("אנא הזן כתובת אימייל חוקית");
+      return;
+    }
 
-    navigate('/tripplanner'); // For example – navigate to the planning page after logging in
+    if (!validation.validatePassword(password)) {
+      alert("הסיסמה חייבת להיות באורך של לפחות 6 תווים");
+      return;
+    }
+
+    try {
+      // Post request to the server for login
+      const response = await axios.post("/api/users/login", {
+        email,
+        password,
+      });
+
+      localStorage.setItem("username", response.data.user.username);
+
+      console.log("Login success:", response.data);
+
+      // navigate to Home page
+      navigate("/home");
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("פרטי ההתחברות שגויים או שהתרחשה שגיאה");
+    }
   }
 
   return (
-    <div dir = "rtl">
+    <div dir="rtl" className="login-page">
       <h1>התחברות</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="login-form">
         <FormStringInput
           label="אימייל:"
           type="email"
@@ -36,11 +59,12 @@ function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">התחבר</button>
+        <button type="submit" className="login-btn">
+          התחבר
+        </button>
       </form>
     </div>
   );
 }
 
 export default LoginPage;
-// This is the LoginPage component that allows users to log in.

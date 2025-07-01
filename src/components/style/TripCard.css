@@ -1,0 +1,60 @@
+.trip-card {
+  position: relative; /* הוסף שורה זו */
+  display: flex;
+  flex-direction: row-reverse; /* סדר פריטים RTL */
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+
+
+.trip-card:hover {
+  transform: scale(1.02);
+}
+
+
+.trip-card-image {
+  width: 140px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0 8px 8px 0;
+  flex-shrink: 0;
+}
+
+
+.trip-card-content {
+  flex: 1;
+  padding: 12px;
+  text-align: right;
+}
+
+
+.trip-card-content h3 {
+  margin: 0 0 8px;
+}
+
+.trip-card-content p {
+  margin: 4px 0;
+}
+
+.favorite-icon {
+  position: absolute;
+  top: -2px;
+  left: 8px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.favorite-icon:hover {
+  transform: scale(1.2);
+}
+

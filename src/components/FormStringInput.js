@@ -5,7 +5,7 @@ import React from "react";
  */
 function FormStringInput({ label, type = "text", value, onChange, required = true, placeholder = "" }) {
   return (
-    <div style={{ marginBottom: "10px" }}>
+    <div>
       <label>{label}</label>
       <br />
       <input

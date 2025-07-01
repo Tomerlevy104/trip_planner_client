@@ -1,0 +1,23 @@
+.trip-options-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.trip-options-container h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: #1e4d91;
+  margin-bottom: 24px;
+}
+
+.trip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 500px;
+  overflow-y: auto;
+}

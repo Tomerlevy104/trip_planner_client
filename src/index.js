@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom'; // Importing the BrowserRouter to enable routing in the app
 import reportWebVitals from './reportWebVitals';
+import "./style/global.css";
+
 
 
 // It locates the <div id="root"> in the HTML.
