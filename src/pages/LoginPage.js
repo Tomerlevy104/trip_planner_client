@@ -32,7 +32,7 @@ function LoginPage() {
       });
 
       localStorage.setItem("username", response.data.user.username);
-
+      localStorage.setItem("token", response.data.token); //Save JWT token if received from the server
       console.log("Login success:", response.data);
 
       // navigate to Home page

@@ -51,8 +51,9 @@ function RegisterPage() {
       });
 
       localStorage.setItem("username", response.data.user.username);
+      localStorage.setItem("token", response.data.token); //Save JWT token if received from the server
       console.log("Register success:", response.data);
-
+      alert("הרשמה בוצעה בהצלחה!");
 
       navigate("/home"); // Navigate to the Home page after successful registration
     } catch (error) {

@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./style/LandingPage.css";
-import Button from "@mui/material/Button"; // נשתמש ב-MUI לסטיילינג
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -23,20 +22,6 @@ function LandingPage() {
           התחברות
         </button>
 
-        <button className="primary-btn" onClick={() => navigate("/history")}>
-          היסטוריית מסלולים
-        </button>
-
-        <button
-          className="secondary-btn"
-          onClick={() => navigate("/TripPlanner")}
-        >
-          תכנון מסלול
-        </button>
-
-        <Button variant="contained" color="info" onClick={() => navigate("/home")}>
-          דף הבית
-        </Button>
       </div>
     </div>
   );
