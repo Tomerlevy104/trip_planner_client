@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import FormStringInput from "../components/FormStringInput";
 import FormDDLInput from "../components/FormDDLInput";
 import "./style/PlannerPage.css";
+import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
 
@@ -12,10 +13,6 @@ function PlannerPage() {
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [tripType, setTripType] = useState("בחר");
-  // const [participants, setParticipants] = useState(1);
-  // const [budget, setBudget] = useState("");
-  // const [preferences, setPreferences] = useState([]);
-  // const [difficulty, setDifficulty] = useState("");
   const navigate = useNavigate();
 
   // דוגמאות לנתונים
@@ -27,32 +24,55 @@ function PlannerPage() {
     'ארה"ב': ["ניו יורק", "לוס אנג׳לס", "סן פרנסיסקו"],
   };
 
-  // const handlePreferenceChange = (e) => {
-  //   const value = e.target.value;
-  //   if (e.target.checked) {
-  //     setPreferences([...preferences, value]);
-  //   } else {
-  //     setPreferences(preferences.filter((pref) => pref !== value));
-  //   }
-  // };
-
   // Here we handle the form submission
-  // In the future, we will send this data to the backend or a model for processing
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("שם הטיול:", tripName);
-    console.log("מדינה:", country);
-    console.log("עיר:", city);
-    console.log("סוג הטיול:", tripType);
-    // console.log("משתתפים:", participants);
-    // console.log("תקציב:", budget);
-    // console.log("העדפות:", preferences);
-    // console.log("רמת קושי:", difficulty);
-    navigate("/tripoptions"); // פה אני אומר לאן אני רוצה לעבור אחרי לחיצה על הכפתור "צור מסלול" בעתיד אני אצטרך לשלוח את זה למודל
+
+    // מיפוי סוגי טיול
+    const tripTypeMap = {
+      "טיול אופניים": "bicycle",
+      "טיול רגלי": "trek",
+    };
+
+    const tripTypeValue = tripTypeMap[tripType];
+
+    if (!tripTypeValue) {
+      alert("יש לבחור סוג טיול חוקי.");
+      return;
+    }
+
+    try {
+      const requestData = {
+        tripName,
+        tripType: tripTypeValue,
+        country,
+        city,
+      };
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("לא נמצאה התחברות. נא להתחבר מחדש.");
+        return;
+      }
+
+      const response = await axios.post("/api/trips/generate", requestData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("Generated trip:", response.data);
+
+      // Navigate to the trip options page with the generated trip data
+      navigate("/tripoptions", { state: response.data.data });
+    } catch (error) {
+      console.error("Error generating trip:", error);
+      alert("אירעה שגיאה ביצירת המסלול.");
+    }
   };
 
   return (
-<div dir="rtl" className="planner-page">
+    <div dir="rtl" className="planner-page">
       <h1>תכנון מסלול</h1>
       <form onSubmit={handleSubmit} className="planner-form">
         <FormStringInput
@@ -91,45 +111,9 @@ function PlannerPage() {
           required
         />
 
-        {/* <FormDDLInput
-          label="מספר משתתפים:"
-          value={participants}
-          onChange={(e) => setParticipants(e.target.value)}
-          options={participantsOptions}
-          required
-        /> */}
-
-        {/* <FormDDLInput
-          label="תקציב משוער:"
-          value={budget}
-          onChange={(e) => setBudget(e.target.value)}
-          options={[
-            '0–100 ש"ח',
-            '100–200 ש"ח',
-            '200–300 ש"ח',
-            '300–400 ש"ח',
-            '400–500 ש"ח',
-            'מעל 500 ש"ח',
-          ]}
-          required
-        /> */}
-
-        {/* <FormRadioGroup
-          label="רמת קושי:"
-          options={["קל", "בינוני", "קשה"]}
-          selectedValue={difficulty}
-          onChange={(e) => setDifficulty(e.target.value)}
-          name="difficulty"
-        /> */}
-
-        {/* <FormCheckboxGroup
-          label="העדפות מיוחדות:"
-          options={["קמפינג", "חניה קרובה", "נגישות לנכים", "מאגרי מים"]}
-          selectedValues={preferences}
-          onChange={handlePreferenceChange}
-        /> */}
-
-        <button type="submit" className= "planner-submit">צור מסלול</button>
+        <button type="submit" className="planner-submit">
+          צור מסלול
+        </button>
       </form>
     </div>
   );
