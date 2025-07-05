@@ -8,21 +8,25 @@ import RegisterPage from "./pages/RegisterPage";
 import TripOptionsPage from "./pages/TripOptionsPage";
 import TripDetailsPage from "./pages/TripDetailsPage";
 import HomePage from "./pages/HomePage";
+import MainLayout from "./pages/MainLayout";
 
 function App() {
   return (
     <div dir="rtl" style={{ padding: "20px" }} className="App">
       <Routes>
+        {/* Pages outside the layout */}
         <Route path="/landing" element={<LandingPage />} />
-        <Route path="/tripplanner" element={<PlannerPage />} />
-        <Route path="/history" element={<HistoryPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/tripoptions" element={<TripOptionsPage />} />
-        <Route path="/tripdetails/:tripId" element={<TripDetailsPage />} />
-        <Route path="/home" element={<HomePage />} />
 
-        {/* Add more routes as needed */}
+        {/* Pages with the Layout */}
+        <Route element={<MainLayout />}>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/tripoptions" element={<TripOptionsPage />} />
+          <Route path="/tripdetails/:tripId" element={<TripDetailsPage />} />
+          <Route path="/tripplanner" element={<PlannerPage />} />
+          <Route path="/history" element={<HistoryPage />} />
+        </Route>
       </Routes>
     </div>
   );
