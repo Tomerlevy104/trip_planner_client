@@ -12,47 +12,44 @@ function TripCard({
   isFavorite = false,
   onFavoriteToggle,
   onClick,
+  className = ""  
+
 }) {
   const defaultImageUrl = "/images/default_trip.png";
 
   return (
-    <div className="trip-card" onClick={onClick}>
-      {/* לב מועדפים */}
-      <div
-        className="favorite-icon"
-        onClick={(e) => {
-          e.stopPropagation(); // למנוע לחיצה על הכרטיס
-          onFavoriteToggle && onFavoriteToggle();
-        }}
-        title={isFavorite ? "הסר ממועדפים" : "הוסף למועדפים"}
-      >
-        {isFavorite ? "❤️" : "🤍"}
-      </div>
+<div className={`trip-card ${className}`} onClick={onClick}>
 
-      {/* תמונה */}
-      <img
-        src={imageUrl || defaultImageUrl}
-        alt={` ${city || country}`}
-        className="trip-card-image"
-      />
+  {/* תמונה בחלק העליון */}
+  <img
+    src={imageUrl || defaultImageUrl}
+    alt={` ${city || country}`}
+    className="trip-card-image"
+  />
 
-      {/* תוכן */}
-      <div className="trip-card-content">
-        <h3>{tripName}</h3>
-        <p>
-          <strong>יעד:</strong> {country}, {city}
-        </p>
-        <p>
-          <strong>רמת קושי:</strong> {difficulty || "לא נבחר"}
-        </p>
-        <p>
-          <strong>סוג טיול:</strong> {tripType}
-        </p>
-        <p>
-          <strong>מרחק כולל:</strong> {distance}
-        </p>
-      </div>
+  {/* בר פעולות מתחת לתמונה */}
+  <div className="trip-card-bar">
+    <div
+      className={`favorite-icon ${isFavorite ? "favorited" : ""}`}
+      onClick={(e) => {
+        e.stopPropagation();
+        onFavoriteToggle && onFavoriteToggle();
+      }}
+      title={isFavorite ? "הסר ממועדפים" : "הוסף למועדפים"}
+    >
+      {isFavorite ? "❤️" : "🤍"}
     </div>
+  </div>
+
+  {/* תוכן הכרטיס */}
+  <div className="trip-card-content">
+    <h3>{tripName}</h3>
+    <div><strong>יעד:</strong> {country}, {city}</div>
+    <div><strong>רמת קושי:</strong> {difficulty || "לא נבחר"}</div>
+    <div><strong>סוג טיול:</strong> {tripType}</div>
+    <div><strong>מרחק כולל:</strong> {distance}</div>
+  </div>
+</div>
   );
 }
 
