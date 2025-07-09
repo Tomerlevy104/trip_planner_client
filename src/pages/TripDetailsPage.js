@@ -3,6 +3,7 @@ import { useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import WeatherForecastCard from "../components/WeatherForecastCard";
 import "./style/TripDetailsPage.css";
+import TripMap from "../components/TripMap";
 
 function TripDetailsPage() {
   const { tripId } = useParams();
@@ -44,16 +45,17 @@ function TripDetailsPage() {
 
   return (
     <div className="trip-details-container" dir="rtl">
-      <h1>{trip.tripName || trip.name}</h1>
-      <p className="trip-description">{trip.tripDescription || "אין תיאור זמין."}</p>
+      <h1 className="trip-title">{trip.tripName || trip.name}</h1>
+      <p className="trip-description">
+        {trip.tripDescription || "אין תיאור זמין."}
+      </p>
       <div className="trip-info-cards">
         <div className="info-card">
           <strong>סוג טיול:</strong>{" "}
           {trip.tripType === "bicycle" ? "טיול אופניים" : "טיול רגלי"}
         </div>
         <div className="info-card">
-          <strong>רמת קושי:</strong>{" "}
-          {trip.difficulty || "לא צוינה"}
+          <strong>רמת קושי:</strong> {trip.difficulty || "לא צוינה"}
         </div>
         <div className="info-card">
           <strong>מרחק כולל:</strong>{" "}
@@ -65,13 +67,18 @@ function TripDetailsPage() {
       <ul className="trip-days-list">
         {(trip.dailyBreakdown || []).map((d) => (
           <li key={d.day}>
-            יום {d.day} - {d.distance} ק״מ {d.description && ` - ${d.description}`}
+            יום {d.day} - {d.distance} ק״מ{" "}
+            {d.description && ` - ${d.description}`}
           </li>
         ))}
       </ul>
-
+      <br />
       <div className="trip-map-placeholder">
-        מפה תוצג כאן
+        <TripMap
+          startPoint={trip.route.startPoint}
+          endPoint={trip.route.endPoint}
+          waypoints={trip.route.waypoints}
+        />
       </div>
       <br />
 
@@ -82,7 +89,7 @@ function TripDetailsPage() {
         upcomingDays={[
           { date: "2025-07-01", min: "22°", max: "26°", description: "Sunny" },
           { date: "2025-07-02", min: "23°", max: "27°", description: "Sunny" },
-          { date: "2025-07-03", min: "21°", max: "25°", description: "Sunny" }
+          { date: "2025-07-03", min: "21°", max: "25°", description: "Sunny" },
         ]}
       />
     </div>

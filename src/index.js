@@ -5,8 +5,7 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom'; // Importing the BrowserRouter to enable routing in the app
 import reportWebVitals from './reportWebVitals';
 import "./style/global.css";
-
-
+import "leaflet/dist/leaflet.css";
 
 // It locates the <div id="root"> in the HTML.
 // It "injects" the <App /> component into it.

@@ -17,7 +17,7 @@ function TripOptionsPage() {
         {
           ...trip,
           id: uuidv4(),
-          dbId: null,      // Initially no database ID
+          dbId: null, // Initially no database ID
           isFavorite: false,
         },
       ]);
@@ -37,61 +37,57 @@ function TripOptionsPage() {
   // Handle favorite toggle (save/remove trip)
   //-----------------------------------------------
   const handleToggleFavorite = async (tripId) => {
-  const trip = trips.find((t) => t.id === tripId);
-  if (!trip) return;
+    const trip = trips.find((t) => t.id === tripId);
+    if (!trip) return;
 
-  const token = localStorage.getItem("token");
-  if (!token) {
-    alert("לא נמצאה התחברות. נא להתחבר מחדש.");
-    return;
-  }
-
-  if (trip.dbId) {
-    // כבר נשמר => מחיקה
-    try {
-      await axios.delete(`/api/trips/${trip.dbId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      setTrips((prevTrips) =>
-        prevTrips.map((t) =>
-          t.id === tripId
-            ? { ...t, isFavorite: false, dbId: null }
-            : t
-        )
-      );
-
-      alert("הטיול הוסר מהמועדפים.");
-    } catch (error) {
-      console.error("Error deleting trip:", error);
-      alert("שגיאה במחיקת הטיול.");
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("לא נמצאה התחברות. נא להתחבר מחדש.");
+      return;
     }
 
-  } else {
-    // עדיין לא נשמר => שמירה
-    try {
-      const response = await axios.post("/api/trips/save", trip, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    if (trip.dbId) {
+      // Already saved (Exist in DB) => Delete
+      try {
+        await axios.delete(`/api/trips/${trip.dbId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-      const savedTrip = response.data.data;
+        setTrips((prevTrips) =>
+          prevTrips.map((t) =>
+            t.id === tripId ? { ...t, isFavorite: false, dbId: null } : t
+          )
+        );
 
-      setTrips((prevTrips) =>
-        prevTrips.map((t) =>
-          t.id === tripId
-            ? { ...t, isFavorite: true, dbId: savedTrip._id }
-            : t
-        )
-      );
+        alert("הטיול הוסר מהמועדפים.");
+      } catch (error) {
+        console.error("Error deleting trip:", error);
+        alert("שגיאה במחיקת הטיול.");
+      }
+    } else {
+      // עדיין לא נשמר => שמירה
+      try {
+        const response = await axios.post("/api/trips/save", trip, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-      alert("הטיול נוסף למועדפים!");
-    } catch (error) {
-      console.error("Error saving trip:", error);
-      alert("שגיאה בשמירת הטיול.");
+        const savedTrip = response.data.data;
+
+        setTrips((prevTrips) =>
+          prevTrips.map((t) =>
+            t.id === tripId
+              ? { ...t, isFavorite: true, dbId: savedTrip._id }
+              : t
+          )
+        );
+
+        alert("הטיול נוסף למועדפים!");
+      } catch (error) {
+        console.error("Error saving trip:", error);
+        alert("שגיאה בשמירת הטיול.");
+      }
     }
-  }
-};
-
+  };
 
   return (
     <div dir="rtl" className="trip-options-container">
