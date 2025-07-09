@@ -1,11 +1,8 @@
-import React, { useState } from "react";
-// import FormRadioGroup from "../components/FormRadioGroup";
-// import FormCheckboxGroup from "../components/FormCheckboxGroup";
+import React, { useState, useEffect } from "react";
 import FormStringInput from "../components/FormStringInput";
 import FormDDLInput from "../components/FormDDLInput";
 import "./style/PlannerPage.css";
 import axios from "axios";
-
 import { useNavigate } from "react-router-dom";
 
 function PlannerPage() {
@@ -13,22 +10,52 @@ function PlannerPage() {
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [tripType, setTripType] = useState("בחר");
+  const [countries, setCountries] = useState([]);
+  const [cities, setCities] = useState([]);
   const navigate = useNavigate();
 
-  // דוגמאות לנתונים
-  // const participantsOptions = Array.from({ length: 20 }, (_, i) => `${i + 1}`);
-  const citiesByCountry = {
-    ישראל: ["תל אביב", "ירושלים", "חיפה"],
-    יפן: ["טוקיו", "קיוטו", "אוסקה"],
-    צרפת: ["פריז", "ניס", "ליון"],
-    'ארה"ב': ["ניו יורק", "לוס אנג׳לס", "סן פרנסיסקו"],
-  };
+  // שליפת רשימת המדינות ברגע שהקומפוננטה נטענת
+  useEffect(() => {
+    async function fetchCountries() {
+      try {
+        const res = await axios.get("https://countriesnow.space/api/v0.1/countries/positions");
+        const countryNames = res.data.data.map(c => c.name);
+        setCountries(countryNames);
+      } catch (err) {
+        console.error("Error fetching countries:", err);
+      }
+    }
 
-  // Here we handle the form submission
+    fetchCountries();
+  }, []);
+
+  // שליפת ערים לפי מדינה שנבחרה
+  useEffect(() => {
+    if (!country) {
+      setCities([]);
+      return;
+    }
+
+    async function fetchCities() {
+      try {
+        const res = await axios.post(
+          "https://countriesnow.space/api/v0.1/countries/cities",
+          { country: country }
+        );
+        setCities(res.data.data);
+      } catch (err) {
+        console.error("Error fetching cities:", err);
+        setCities([]);
+      }
+    }
+
+    fetchCities();
+  }, [country]);
+
+  // שליחת הטופס לשרת
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // מיפוי סוגי טיול
     const tripTypeMap = {
       "טיול אופניים": "bicycle",
       "טיול רגלי": "trek",
@@ -62,8 +89,6 @@ function PlannerPage() {
       });
 
       console.log("Generated trip:", response.data);
-
-      // Navigate to the trip options page with the generated trip data
       navigate("/tripoptions", { state: response.data.data });
     } catch (error) {
       console.error("Error generating trip:", error);
@@ -90,7 +115,7 @@ function PlannerPage() {
             setCountry(e.target.value);
             setCity("");
           }}
-          options={Object.keys(citiesByCountry)}
+          options={countries}
           required
         />
 
@@ -98,7 +123,7 @@ function PlannerPage() {
           label="עיר יעד:"
           value={city}
           onChange={(e) => setCity(e.target.value)}
-          options={country ? citiesByCountry[country] : []}
+          options={cities}
           required
           disabled={!country}
         />
@@ -120,4 +145,3 @@ function PlannerPage() {
 }
 
 export default PlannerPage;
-// This is the PlannerPage component that allows users to plan a trip.
