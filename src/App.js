@@ -15,7 +15,7 @@ function App() {
     <div dir="rtl" style={{ padding: "20px" }} className="App">
       <Routes>
         {/* Pages outside the layout */}
-        <Route path="/landing" element={<LandingPage />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 

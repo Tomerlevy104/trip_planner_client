@@ -49,7 +49,7 @@ function MainLayout() {
           {/* History page Button */}
           <button
             onClick={() => navigate("/history")}
-            title="מסלולים שמורים"
+            title="טיולים שמורים"
             className={isActive("/history") ? "active" : ""}
           >
             <Bookmark fontSize="large" />

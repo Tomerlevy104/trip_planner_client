@@ -1,52 +1,73 @@
+/* עיצוב עמוד הנחיתה */
+
 .landing-container {
   max-width: 800px;
-  margin: 0 auto;
-  padding: 40px 20px;
+  margin: 40px auto;
+  padding: 50px 30px;
   text-align: center;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.7s ease;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .landing-header h1 {
-  font-size: 2rem;
-  color: #1e4d91;
-  margin-bottom: 12px;
+  font-size: 2.4rem;
+  color: #2e7d32; /* ירוק כהה יותר */
+  margin-bottom: 16px;
 }
 
 .landing-header p {
-  font-size: 1rem;
-  color: #333;
+  font-size: 1.1rem;
+  color: #555;
   margin-bottom: 32px;
+  line-height: 1.6;
 }
 
 .landing-actions {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 30px;
 }
 
 .primary-btn,
 .secondary-btn {
   font-size: 1rem;
-  padding: 12px 24px;
+  padding: 14px 28px;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background 0.3s;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 160px;
 }
 
 .primary-btn {
-  background-color: #1e88e5;
+  background: linear-gradient(90deg, #43a047, #81c784);
   color: white;
+  box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
 }
 
 .primary-btn:hover {
-  background-color: #1565c0;
+  background: linear-gradient(90deg, #388e3c, #66bb6a);
 }
 
 .secondary-btn {
   background-color: #e0e0e0;
   color: #333;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .secondary-btn:hover {
-  background-color: #bdbdbd;
+  background-color: #cfcfcf;
+}
+
+/* התאמה ל־main-layout */
+body {
+  background-color: #f5f7fa;
+  margin: 0;
+  padding: 0;
 }
