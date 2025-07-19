@@ -1,16 +1,7 @@
-// src/components/WeatherForecastCard.js
 import React from "react";
-import "./style/WeatherForecastCard.css"; // ניצור קובץ CSS ייעודי
+import "./style/WeatherForecastCard.css";
 
-function WeatherForecastCard({
-  currentTemp = "32°C",
-  currentDescription = "Sunny",
-  upcomingDays = [
-    { date: "2025-07-01", min: "31°", max: "33°", description: "Sunny" },
-    { date: "2025-07-02", min: "30°", max: "32°", description: "Sunny" },
-    { date: "2025-07-03", min: "29°", max: "31°", description: "Sunny" }
-  ]
-}) {
+function WeatherForecastCard({ currentTemp, currentDescription, upcomingDays }) {
   return (
     <div className="weather-forecast-card" dir="rtl">
       <h2>תחזית מזג האוויר לשלושה ימים</h2>
@@ -25,9 +16,7 @@ function WeatherForecastCard({
 
       <h3 className="weather-upcoming-title">תחזית לימים הקרובים</h3>
       <div className="weather-upcoming-list">
-
-
-        {upcomingDays.map((day) => (
+        {upcomingDays?.map((day) => (
           <div key={day.date} className="weather-day">
             <div className="weather-day-date">{day.date}</div>
             <div className="weather-day-desc">{day.description}</div>
@@ -36,8 +25,6 @@ function WeatherForecastCard({
             </div>
           </div>
         ))}
-
-
       </div>
     </div>
   );

@@ -8,10 +8,10 @@ import TripMap from "../components/TripMap";
 function TripDetailsPage() {
   const { tripId } = useParams();
   const location = useLocation();
-
   const [trip, setTrip] = useState(location.state || null);
   const [loading, setLoading] = useState(!location.state);
   const [error, setError] = useState("");
+  const [weather, setWeather] = useState(null);
 
   useEffect(() => {
     if (trip) return;
@@ -30,6 +30,28 @@ function TripDetailsPage() {
 
     fetchTrip();
   }, [trip, tripId]);
+
+  // Fetch weather data based on the trip's start point
+  useEffect(() => {
+    if (!trip || !trip.route?.startPoint) return;
+
+    const fetchWeather = async () => {
+      const { lat, lng } = trip.route.startPoint;
+
+      try {
+        const res = await fetch(`/api/weather?lat=${lat}&lng=${lng}`);
+        const data = await res.json();
+
+        if (data.success) {
+          setWeather(data);
+        }
+      } catch (error) {
+        console.error("שגיאה בשליפת תחזית:", error);
+      }
+    };
+
+    fetchWeather();
+  }, [trip]);
 
   if (loading) {
     return <div className="trip-details-container">טוען נתונים...</div>;
@@ -82,16 +104,18 @@ function TripDetailsPage() {
       </div>
       <br />
 
-      {/* תחזית מזג אוויר - אפשר בעתיד להחליף לנתונים אמיתיים */}
-      <WeatherForecastCard
-        currentTemp="24°C"
-        currentDescription="Sunny"
-        upcomingDays={[
-          { date: "2025-07-01", min: "22°", max: "26°", description: "Sunny" },
-          { date: "2025-07-02", min: "23°", max: "27°", description: "Sunny" },
-          { date: "2025-07-03", min: "21°", max: "25°", description: "Sunny" },
-        ]}
-      />
+      {weather && (
+        <WeatherForecastCard
+          currentTemp={`${weather.currentTemp}°C`}
+          currentDescription=""
+          upcomingDays={weather.forecast.map((day) => ({
+            date: day.date,
+            min: `${day.min}°`,
+            max: `${day.max}°`,
+            description: "",
+          }))}
+        />
+      )}
     </div>
   );
 }
